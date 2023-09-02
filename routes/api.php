@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\VariantProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,3 +30,5 @@ Route::controller(AuthController::class)->group(function () {
 });
 
 Route::resource('inventory', InventoryController::class);
+Route::resource('product', ProductController::class);
+Route::resource('variant', VariantProductController::class);

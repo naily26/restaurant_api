@@ -4,15 +4,32 @@ namespace App\Http\Controllers;
 
 use App\Models\product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Controller;
 
 class ProductController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        $data = product::all();
+        if(!$data->isEmpty()) {
+            return response()->json([
+                'message' => 'successfully',
+                'data' => $data
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'successfully',
+                'data' => 'tidak ada data'
+            ]);
+        }
     }
 
     /**
@@ -28,7 +45,22 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'price' => 'required|integer',
+            'description' => 'required',
+        ]);
+
+        $product = product::create([
+            'name' => $request->name,
+            'price' => $request->price,
+            'description' => $request->description,
+        ]);
+
+        return response()->json([
+            'message' => ' created successfully',
+            'data' => $product
+        ]);
     }
 
     /**
@@ -50,16 +82,44 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, product $product)
+    public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'price' => 'required|integer',
+            'description' => 'required',
+        ]);
+        $data = product::where('id', $id)->first();
+        $status = $data->update($request->all());
+
+        if($status) {
+            return response()->json([
+                'message' => 'successfully edited',
+                'data' => $data
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'failed edit',
+                'data' => $data
+            ]);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(product $product)
+    public function destroy($id)
     {
-        //
+        $data = product::find($id);
+        $status = $data->delete();
+        if($status) {
+            return response()->json([
+                'message' => 'successfully delete',
+            ]);
+        } else {
+            return response()->json([
+                'message' => 'failed delete',
+            ]);
+        }
     }
 }
