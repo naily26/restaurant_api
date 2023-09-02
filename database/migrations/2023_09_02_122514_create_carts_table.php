@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('carts', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('sales_id');
+            $table->foreign('sales_id')->references('id')->on('sales')->onDelete('cascade');
+            $table->foreignId('product_id');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->integer('qty');
             $table->timestamps();
         });
     }

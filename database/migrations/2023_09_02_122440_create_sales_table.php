@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->id();
+            $table->integer('total_price')->nullable();
+            $table->enum('payment_method', ['OVO', 'DANA', 'Shopee_pay', 'Gopay']);
             $table->timestamps();
         });
     }
