@@ -20,7 +20,7 @@ class Authenticate extends Middleware
         abort(response()->json(
             [
                 'api_status' => '401',
-                'message' => 'UnAuthenticated',
+                'message' => 'UnAuthenticated, you are logged out',
             ], 401));
     }
 }

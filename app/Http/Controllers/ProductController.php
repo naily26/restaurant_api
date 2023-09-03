@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\product;
+use App\Models\variant_product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
@@ -18,11 +19,15 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $data = product::all();
-        if(!$data->isEmpty()) {
+        $product = product::all();
+        foreach ($product as $key => $item) {
+            $variant = variant_product::where('product_id', $item->id)->get();
+            $item->variant = $variant;
+        }
+        if(!$product->isEmpty()) {
             return response()->json([
                 'message' => 'successfully',
-                'data' => $data
+                'data' => $product
             ]);
         } else {
             return response()->json([

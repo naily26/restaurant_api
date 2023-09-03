@@ -26,11 +26,22 @@ class SalesController extends Controller
         $data = sales::all();
         foreach ($data as $key => $value) {
            $cart = cart::where('sales_id', $value->id)->get();
-           $value->cart = $cart;
-           foreach ($value->cart as $key2 => $item) {
+           $cart_arr = [];
+           foreach ($cart as $key2 => $item) {
             $detail = cart_detail::where('cart_id', $item->id)->get();
-            $item->variant = $detail;
+            $product = product::select('name', 'price')->where('id', $item->product_id)->first();
+            $product->qty = $item->qty;
+            $product->product_id = $item->product_id;
+            $cart_arr[$key2] = $product;
+            $variant_arr = [];
+            foreach ($detail as $key3 => $det) {
+                $variant = variant_product::select('variant_name', 'additional_price')->where('id', $det->variant_product_id)->first();
+                $variant_arr[$key3] = $variant;
+            }
+            $cart_arr[$key2]->variant =  $variant_arr;
+            $value->cart = $cart_arr;
            }
+           
         }
         return response()->json([
             'message' => 'successfully',

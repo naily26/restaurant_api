@@ -19,7 +19,7 @@ class VariantProductController extends Controller
      */
     public function index()
     {
-        $product = variant_product::all();
+        $product = product::all();
         foreach ($product as $key => $item) {
             $variant = variant_product::where('product_id', $item->id)->get();
             $item->variant = $variant;
